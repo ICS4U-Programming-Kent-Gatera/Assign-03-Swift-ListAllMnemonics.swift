@@ -1,9 +1,89 @@
+import Foundation
 
-//  ListAllMnemonics.swift
-//
-//  Created by Kent Gatera
-//  Created on 2024-05-15
-//  Version 1.0
-//  Copyright (c) Kent Gatera. All rights reserved.
-//
-//  Change me.
+/**
+
+* Describe what your program does.
+
+*
+
+* @author  Kent Gatera
+
+* @version 1.0
+
+* @since   2024-May-14
+
+*/
+// MnemonicsCombos class
+final class MnemonicsCombos {
+
+    static func main() {
+        let inputFile = URL(fileURLWithPath: "input.txt")
+        let outputFile = URL(fileURLWithPath: "output.txt")
+        var mnemonicsOutputList = [String]()
+
+        // Dictionary for Mnemonics
+        var lettersForDigitDictionary = [String: String]()
+        lettersForDigitDictionary["1"] = " "
+        lettersForDigitDictionary["2"] = "ABC"
+        lettersForDigitDictionary["3"] = "DEF"
+        lettersForDigitDictionary["4"] = "GHI"
+        lettersForDigitDictionary["5"] = "JKL"
+        lettersForDigitDictionary["6"] = "MNO"
+        lettersForDigitDictionary["7"] = "PQRS"
+        lettersForDigitDictionary["8"] = "TUV"
+        lettersForDigitDictionary["9"] = "WXYZ"
+        lettersForDigitDictionary["0"] = " "
+
+        do {
+            // Getting/reading the input file.
+            let inputString = try String(contentsOf: inputFile)
+            let mnemonicNums = inputString.components(separatedBy: .newlines)
+            var errorLineIter = 1
+            var outputString = ""
+
+            for mnemonic in mnemonicNums {
+                // Making sure the list is clear.
+                mnemonicsOutputList.removeAll()
+                // Create list of all Mnemonic results
+                let result = ListAllMnemonics(mnemonic, mnemonicsOutputList, lettersForDigitDictionary)
+                outputString += "\(mnemonic): \(result)\n"
+                errorLineIter += 1
+                
+            }
+            try outputString.write(to: outputFile, atomically: true, encoding: .utf8)
+            
+            print("Done.")
+        } catch {
+            print("Invalid input path!")
+        }
+    }
+
+    // Recursive method that gets the MnemonicsCombos of a number.
+    private static func ListAllMnemonics(_ someNumString: String, _ mnemonicsOutputList: [String], _ alphNumMap: [String: String]) -> [String] {
+        if someNumString.isEmpty {
+            // Returning an empty list to prevent errors.
+            return [""]
+        } else {
+            // Creating the list where the finished combinations go.
+            var mnemonicsCombos = [String]()
+
+            let currentNumFromString = someNumString.first!
+            // If the letter does not register in the dictionary, return an empty value.
+            guard let dictDefinition = alphNumMap[String(currentNumFromString)] else { return [] }
+
+            for frontLetter in dictDefinition {
+                // For each of those characters in the string, we add them to a list of all
+                // possible combinations.
+                let listOfSuffixes = ListAllMnemonics(String(someNumString.dropFirst()), mnemonicsCombos, alphNumMap)
+                for suffixCombination in listOfSuffixes {
+                    let newValue = String(frontLetter) + suffixCombination
+                    mnemonicsCombos.append(newValue)
+                }
+            }
+            return mnemonicsCombos
+        }
+    }
+}
+
+// Call the main method
+MnemonicsCombos.main()
