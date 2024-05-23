@@ -60,18 +60,20 @@ final class MnemonicsCombos {
                 print("Invalid input path!")
             }
         } else if (userChoice == "1") {
-            print("Enter the mnemonic: ", terminator: "")
-            let mnemonic = readLine()
-            // Making sure the list is clear.
-            mnemonicsOutputList.removeAll()
-            // Create list of all Mnemonic results
-            let result = ListAllMnemonics(mnemonic, mnemonicsOutputList, lettersForDigitDictionary)
-            outputString += "\(mnemonic): \(result)\n"
-            
+            do {
+                print("Enter the mnemonic: ", terminator: "")
+                let mnemonic = readLine()!
+                // Making sure the list is clear.
+                mnemonicsOutputList.removeAll()
+                // Create list of all Mnemonic results
+                let result = ListAllMnemonics(mnemonic, mnemonicsOutputList, lettersForDigitDictionary)
+                let outputString = "\(mnemonic): \(result)\n"
+                try outputString.write(to: outputFile, atomically: true, encoding: .utf8)
+            } catch {
+                print("Error in outputString.")
             }
-            try outputString.write(to: outputFile, atomically: true, encoding: .utf8)
-            
-            print("Done.")
+        }
+        print("Done.")
         }
     }
 
