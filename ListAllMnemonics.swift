@@ -54,21 +54,23 @@ final class MnemonicsCombos {
                     
                 }
                 try outputString.write(to: outputFile, atomically: true, encoding: .utf8)
-                
-                print("Done.")
             } catch {
                 print("Invalid input path!")
             }
         } else if (userChoice == "1") {
             do {
                 print("Enter the mnemonic: ", terminator: "")
-                let mnemonic = readLine()!
-                // Making sure the list is clear.
-                mnemonicsOutputList.removeAll()
-                // Create list of all Mnemonic results
-                let result = ListAllMnemonics(mnemonic, mnemonicsOutputList, lettersForDigitDictionary)
-                let outputString = "\(mnemonic): \(result)\n"
-                try outputString.write(to: outputFile, atomically: true, encoding: .utf8)
+                if let mnemonic = readLine(), let _ = Int(mnemonic) {
+                    // Making sure the list is clear.
+                    mnemonicsOutputList.removeAll()
+                    // Create list of all Mnemonic results
+                    let result = ListAllMnemonics(mnemonic, mnemonicsOutputList, lettersForDigitDictionary)
+                    let outputString = "\(mnemonic): \(result)\n"
+                    try outputString.write(to: outputFile, atomically: true, encoding: .utf8)
+                } else {
+                    print("Input must be an integer.\n")
+                }
+                
             } catch {
                 print("Error in outputString.")
             }
